@@ -12,11 +12,8 @@
 			"item": [
 				{
 					"name": "create-user",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Authorization",
@@ -34,13 +31,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/users/login",
+							"raw": "{{baseURL}}/users/create",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"users",
-								"login"
+								"create"
 							]
 						},
 						"description": "Only admins can create the new user.\n\nTo create the first every admin, use the command \"npm run seed\""
