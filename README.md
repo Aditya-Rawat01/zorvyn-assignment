@@ -3,14 +3,16 @@
 Backend system for managing financial records with role-based access control and dashboard analytics.
 
 ---
+
 ## Quick Test Flow
 
-1. Run `npm run seed` and setup postman
+1. Run `npm run seed`
 2. Login using admin credentials
 3. Copy token
 4. Create a user
 5. Create records
 6. View dashboard
+
 ## Assumptions & Design Decisions
 
 ### Assumptions
@@ -154,14 +156,14 @@ src/
 ---
 
 ## Postman Collection
+
 > All endpoints are available in the provided Postman collection for direct testing.
-### Option 1: Open in Postman (Login Required)
+
+### Option 1: Open in Postman
 
 You can access the hosted collection here:
 
-[Open Postman Collection](https://.postman.co/workspace/My-Workspace~91052d1f-e197-4ff3-82d0-63510a793a90/collection/33501405-47d9d13c-019b-4061-a2ce-44567571bda9?action=share&creator=33501405)
-
-> Note: This link may require you to log in to Postman.
+[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/33501405-47d9d13c-019b-4061-a2ce-44567571bda9?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D33501405-47d9d13c-019b-4061-a2ce-44567571bda9%26entityType%3Dcollection%26workspaceId%3Dfa78525d-3756-4f05-8edc-9ec0f68e8d0d)
 
 ---
 
@@ -178,8 +180,10 @@ The Postman collection is included in the repository:
 3. Select the collection file
 4. Configure the variables (baseURL, token, user-token, recordId, userId)
 5. Start testing APIs
-- `token` → used for ADMIN / ANALYST  
+
+- `token` → used for ADMIN / ANALYST
 - `user-token` → used for USER role testing
+
 ---
 
 ### Default Admin Credentials
