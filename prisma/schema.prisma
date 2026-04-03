@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ROLE {
+  ANALYST
+  USER
+  ADMIN
+}
+
+enum TYPE {
+  EXPENSE
+  INCOME
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      ROLE     @default(USER)
+  isActive  Boolean  @default(true) // soft delete feature for user
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  records   Record[]
+}
+
+model Record {
+  id          String   @id @default(uuid())
+  amount      Float
+  type        TYPE
+  category    String?
+  description String?
+  date        DateTime @default(now()) // dashboard will use this, this is user defined.
+  createdAt   DateTime @default(now()) // this is actual creation date for the record
+  updatedAt   DateTime @updatedAt
+  isDeleted   Boolean  @default(false) // soft delete feature for the record
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+}

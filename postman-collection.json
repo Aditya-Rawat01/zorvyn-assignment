@@ -1,0 +1,561 @@
+{
+	"info": {
+		"_postman_id": "47d9d13c-019b-4061-a2ce-44567571bda9",
+		"name": "Zorvyn-Assignment",
+		"description": "This collection demonstrates a finance backend with role-based access control.\n\nFlow:\n\n1. Login as admin (after seeding)\n    \n2. Create users\n    \n3. Create records\n    \n4. View dashboard analytics\n    \n\nRoles:\n\n- USER → dashboard only\n    \n- ANALYST → read-only records\n    \n- ADMIN → full access",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33501405"
+	},
+	"item": [
+		{
+			"name": "user-routes",
+			"item": [
+				{
+					"name": "create-user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"user@mail.com\",\n    \"password\": \"12345\",\n    \"role\": \"USER\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						},
+						"description": "Only admins can create the new user.\n\nTo create the first every admin, use the command \"npm run seed\""
+					},
+					"response": []
+				},
+				{
+					"name": "login-user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"admin@example.com\",\n    \"password\":\"admin123\"\n    // this is admin user login credentials, will work after the \"npm run seed\" command\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						},
+						"description": "for logging in user and returning jwt token, which then needs to be set in the \"token\" variable."
+					},
+					"response": []
+				},
+				{
+					"name": "update-user-role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"role\": \"ANALYST\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{userId}}/role",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}",
+								"role"
+							]
+						},
+						"description": "admin only route, to change the role of the user/analyst."
+					},
+					"response": []
+				},
+				{
+					"name": "change-user-status (soft delete)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{userId}}/status",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}",
+								"status"
+							]
+						},
+						"description": "admin only route, to soft delete the user by changing the \"isActive\" status of the user."
+					},
+					"response": []
+				},
+				{
+					"name": "delete-user",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/users/{{userId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						},
+						"description": "admin only route, to permanently delete the user."
+					},
+					"response": []
+				}
+			],
+			"description": "contains all the user related routes, creation, updation (role, status), deletion (soft, hard)"
+		},
+		{
+			"name": "record-routes",
+			"item": [
+				{
+					"name": "create-record",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 108,\n    \"type\": \"EXPENSE\",\n    \"description\": \"this is first transaction\",\n    \"category\": \"first category\"\n\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/records/create",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"records",
+								"create"
+							]
+						},
+						"description": "admin only route, to create a new record."
+					},
+					"response": []
+				},
+				{
+					"name": "get-records",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/records",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"records"
+							]
+						},
+						"description": "To get all the records (with pagination)."
+					},
+					"response": []
+				},
+				{
+					"name": "get-records-with-pagination",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/records?limit=5&page=2",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"records"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								}
+							]
+						},
+						"description": "Explicitly sending query parameters for pagination."
+					},
+					"response": []
+				},
+				{
+					"name": "get-filtered-records",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/records?type=INCOME&userId={{userId}}&category=third category",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"records"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "INCOME"
+								},
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								},
+								{
+									"key": "category",
+									"value": "third category"
+								}
+							]
+						},
+						"description": "Admin and analyst only route. To get filtered records."
+					},
+					"response": []
+				},
+				{
+					"name": "update-record",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 200\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/records/{{recordId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"records",
+								"{{recordId}}"
+							]
+						},
+						"description": "route to update a record."
+					},
+					"response": []
+				},
+				{
+					"name": "delete-record",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/records/{{recordId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"records",
+								"{{recordId}}"
+							]
+						},
+						"description": "to soft delete a record."
+					},
+					"response": []
+				}
+			],
+			"description": "contains all the record related endpoints. Creation, Read, Filter, Updation and deletion."
+		},
+		{
+			"name": "dashboard",
+			"item": [
+				{
+					"name": "aggregations-all",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/dashboard",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"dashboard"
+							]
+						},
+						"description": "returns the aggregations for all the records."
+					},
+					"response": []
+				},
+				{
+					"name": "aggregation-by-userId",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/dashboard?userId={{userId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"dashboard"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								}
+							]
+						},
+						"description": "returns the aggregations for the records for specific userId"
+					},
+					"response": []
+				}
+			],
+			"description": "Contains the dashboard endpoint, shows the monthly trends, aggregated values (income, expense), recent activities, category totals."
+		},
+		{
+			"name": "user-scope",
+			"item": [
+				{
+					"name": "user-dashboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/dashboard",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"dashboard"
+							]
+						},
+						"description": "this route shows what user sees in their dashboard."
+					},
+					"response": []
+				},
+				{
+					"name": "get-records(Unauthorized route)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/records",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"records"
+							]
+						},
+						"description": "unreachable route for user, added just for testing."
+					},
+					"response": []
+				},
+				{
+					"name": "login-user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"janedoe@mail.com\",\n    \"password\":\"12345\"\n    // this is normal user login credentials\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						},
+						"description": "route for logging in as user."
+					},
+					"response": []
+				}
+			],
+			"description": "Contains the requests showing what a normal user can and cannot access. Tests user permissions and how the system handles the restricted routes and expected responses."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "recordId",
+			"value": ""
+		},
+		{
+			"key": "user-token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
